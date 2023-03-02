@@ -120,7 +120,7 @@ class And(Formula):
             return "true"
         if len(self.c) == 1:
             return str(self.c[0])
-        return "(" + " & ".join(map(str, self.c)) + ")"
+        return "(" + " /\ ".join(map(str, self.c)) + ")"
     def __repr__(self) -> str:
         return "(and " + " ".join(map(repr, self.c)) + ")"
     def _unpack(self) -> Tuple: return ("And", self.c)
@@ -133,19 +133,32 @@ class Or(Formula):
             return "false"
         if len(self.c) == 1:
             return str(self.c[0])
-        return "(" + " | ".join(map(str, self.c)) + ")"
+        return "(" + " \/ ".join(map(str, self.c)) + ")"
     def __repr__(self) -> str:
         return "(or " + " ".join(map(repr, self.c)) + ")"
     def _unpack(self) -> Tuple: return ("Or", self.c)
+
+def notReplace(s):
+    s_prime = ""
+    for i in range(0, len(s)):
+        if s[i] == "=":
+            s_prime += "#"
+        elif s[i] == "#":
+            s_prime += "="
+        else:
+            s_prime += s[i]
+    return s_prime
 
 class Not(Formula):
     def __init__(self, formula: Formula):
         self.f = formula
     def __str__(self) -> str:
-        if isinstance(self.f, (Relation, Var)):
+        if isinstance(self.f, (Relation)):
+            return notReplace(str(self.f))
+        if isinstance(self.f, (Var)):
             return "~" + str(self.f)
         if isinstance(self.f, Equal):
-            return str(self.f.args[0]) + " ~= " + str(self.f.args[1])
+            return str(self.f.args[0]) + " # " + str(self.f.args[1])
         return "~(" + str(self.f) + ")"
     def __repr__(self) -> str:
         return f"(not {repr(self.f)})"
@@ -157,7 +170,7 @@ class Exists(Formula):
         self.sort = sort
         self.f = formula
     def __str__(self) -> str:
-        return "exists "+self.var+":"+self.sort+". " + str(self.f)
+        return "\E "+self.var+" \in "+self.sort+" : " + str(self.f)
     def __repr__(self) -> str:
         return f"(exists {self.var} {self.sort} {repr(self.f)})"
     def _unpack(self) -> Tuple: return ("Exists", self.var, self.sort, self.f)
@@ -168,7 +181,7 @@ class Forall(Formula):
         self.sort = sort
         self.f = formula
     def __str__(self) -> str:
-        return "forall "+self.var+":"+self.sort+". " + str(self.f)
+        return "\A "+self.var+" \in "+self.sort+" : " + str(self.f)
     def __repr__(self) -> str:
         return f"(forall {self.var} {self.sort} {repr(self.f)})"
     def _unpack(self) -> Tuple: return ("Forall", self.var, self.sort, self.f)
@@ -188,7 +201,7 @@ class Relation(Formula):
         self.rel = r
         self.args = args
     def __str__(self) -> str:
-        return self.rel + "(" + ", ".join(map(str, self.args)) + ")"
+        return self.rel + " = " + " ".join(map(str, self.args))
     def __repr__(self) -> str:
         return f"({self.rel} {' '.join(map(repr, self.args))})"
     def _unpack(self) -> Tuple: return ("Relation", self.rel, self.args)
