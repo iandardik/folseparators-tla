@@ -133,6 +133,10 @@ class Or(Formula):
             return "false"
         if len(self.c) == 1:
             return str(self.c[0])
+        if len(self.c) == 2 and isinstance(self.c[0],(Not)) and not isinstance(self.c[1],(Not)):
+            return "(" + str(self.c[0].f) + " => " + str(self.c[1]) + ")"
+        if len(self.c) == 2 and isinstance(self.c[1],(Not)) and not isinstance(self.c[0],(Not)):
+            return "(" + str(self.c[1].f) + " => " + str(self.c[0]) + ")"
         return "(" + " \/ ".join(map(str, self.c)) + ")"
     def __repr__(self) -> str:
         return "(or " + " ".join(map(repr, self.c)) + ")"
