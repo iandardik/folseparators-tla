@@ -1,0 +1,36 @@
+(sort Sort1)
+
+(relation senderBit Sort1)
+(relation receiverBit Sort1)
+
+(constant 0 Sort1)
+(constant 1 Sort1)
+
+(model +
+    ((a0Const Sort1) (a1Const Sort1))
+    (= 0 a0Const)
+    (= 1 a1Const)
+    (receiverBit a0Const)
+    (senderBit a0Const)
+)
+(model +
+    ((a0Const Sort1) (a1Const Sort1))
+    (= 0 a0Const)
+    (= 1 a1Const)
+    (receiverBit a0Const)
+    (senderBit a1Const)
+)
+(model +
+    ((a0Const Sort1) (a1Const Sort1))
+    (= 0 a0Const)
+    (= 1 a1Const)
+    (receiverBit a1Const)
+    (senderBit a0Const)
+)
+(model +
+    ((a0Const Sort1) (a1Const Sort1))
+    (= 0 a0Const)
+    (= 1 a1Const)
+    (receiverBit a1Const)
+    (senderBit a1Const)
+)

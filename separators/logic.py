@@ -95,9 +95,9 @@ class Func(Term):
         self.f = f
         self.args = args
     def __str__(self) -> str:
-        return self.f + "(" + ", ".join(map(str, self.args)) + ")"
+        return self.f + "[" + ", ".join(map(str, self.args)) + "]"
     def __repr__(self) -> str:
-        return "(" + self.f + " " + " ".join(map(repr, self.args)) + ")"
+        return "[" + self.f + " " + " ".join(map(repr, self.args)) + "]"
     def _unpack(self) -> Tuple: return ('1Func', self.f, self.args)
     def __hash__(self) -> int: return hash(('1Func', self.f, tuple(map(hash, self.args))))
 
